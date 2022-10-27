@@ -5,7 +5,7 @@ const main = document.querySelector("main");
 const input = document.querySelector("input");
 let username;
 let firstLogin = true;
-
+let firstList = true;
 
 login();
 
@@ -18,6 +18,7 @@ function login() {
             listarMensagens();
             setInterval(listarMensagens, 3000);
             setInterval(keepAlive, 5000);
+            input.addEventListener('keydown', logKey);
         } else {
             login();
         }
@@ -25,12 +26,7 @@ function login() {
 }
 
 function keepAlive() {
-
-    axios.post(url + endpoint[1], username).then(resposta).catch(resposta);
-    function resposta(resposta) {
-        if (resposta.status === 200) { }
-    }
-
+    axios.post(url + endpoint[1], username).then(() => { }).catch(() => { keepAlive() });
 }
 
 function listarMensagens() {
@@ -40,35 +36,33 @@ function listarMensagens() {
         for (let i = 0; i < resposta.data.length; i++) {
             switch (resposta.data[i].type) {
                 case msgType[0]:
-                    main.innerHTML +=
-                        `<div style="background-color: #DCDCDC;">
-                    (${resposta.data[i].time}) ${resposta.data[i].from} ${resposta.data[i].text}.
-                </div>`
+                    main.innerHTML += `<div class="status">
+                    <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> ${resposta.data[i].text}.
+                    </div>`
                     break;
                 case msgType[1]:
-                    main.innerHTML +=
-                        `<div style="background-color: #FFF;">
-                    (${resposta.data[i].time}) ${resposta.data[i].from} para ${resposta.data[i].to}: ${resposta.data[i].text}
-                </div>`
+                    main.innerHTML += `<div class="message">
+                    <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> para <strong>${resposta.data[i].to}</strong>: ${resposta.data[i].text}
+                    </div>`
                     break;
                 case msgType[2]:
                     if (resposta.data[i].from === username.name || resposta.data[i].to === username.name) {
-                        main.innerHTML +=
-                            `<div style="background-color: #FFDEDE;">
-                    (${resposta.data[i].time}) ${resposta.data[i].from} para ${resposta.data[i].to}: ${resposta.data[i].text}
-                </div>`
+                        main.innerHTML += `<div class="private_message">
+                        <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> para <strong>${resposta.data[i].to}</strong>: ${resposta.data[i].text}
+                        </div>`
                     }
                     break;
                 default:
                     break;
             }
         }
-        const elementoQueQueroQueApareca = document.querySelector("main div:last-of-type");
-        elementoQueQueroQueApareca.scrollIntoView();
+        if (firstList) {
+            const elementoQueQueroQueApareca = document.querySelector("main div:last-of-type");
+            elementoQueQueroQueApareca.scrollIntoView();
+            firstList = false;
+        }
     });
 }
-
-input.addEventListener('keydown', logKey);
 
 function logKey(e) {
     if (e.key === "Enter") {
@@ -84,12 +78,15 @@ function enviar() {
         type: "message"
     }
 
-    const promessaNome = axios.post(url + endpoint[2], mensagem);
-    promessaNome.then((resposta) => {
-    });
-    input.value = "";
-    setTimeout(listarMensagens, 500);
-    promessaNome.catch((resposta) => {
-        window.location.reload();
-    });
+    if (input.value.replace(/\s/g, '').length) {
+        const promessaNome = axios.post(url + endpoint[2], mensagem);
+        promessaNome.then((resposta) => {
+        });
+        input.value = "";
+        setTimeout(listarMensagens, 500);
+        promessaNome.catch((resposta) => {
+            console.log(resposta);
+            window.location.reload();
+        });
+    }
 }
