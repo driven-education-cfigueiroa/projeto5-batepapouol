@@ -19,6 +19,7 @@ function login() {
             setInterval(listarMensagens, 3000);
             setInterval(keepAlive, 5000);
             input.addEventListener('keydown', logKey);
+            addEventListener('resize', () => { rolaPraBaixo() });
         } else {
             login();
         }
@@ -57,11 +58,15 @@ function listarMensagens() {
             }
         }
         if (firstList) {
-            const elementoQueQueroQueApareca = document.querySelector("main div:last-of-type");
-            elementoQueQueroQueApareca.scrollIntoView();
+            rolaPraBaixo();
             firstList = false;
         }
     });
+}
+
+function rolaPraBaixo() {
+    const elementoQueQueroQueApareca = document.querySelector("main div:last-of-type");
+    elementoQueQueroQueApareca.scrollIntoView();
 }
 
 function logKey(e) {
@@ -83,7 +88,7 @@ function enviar() {
         promessaNome.then((resposta) => {
         });
         input.value = "";
-        setTimeout(listarMensagens, 500);
+        setTimeout(() => { listarMensagens(); rolaPraBaixo() }, 500);
         promessaNome.catch((resposta) => {
             console.log(resposta);
             window.location.reload();
