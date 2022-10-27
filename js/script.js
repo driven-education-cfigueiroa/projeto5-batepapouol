@@ -8,6 +8,7 @@ let firstLogin = true;
 let firstList = true;
 
 login();
+resetHeight();
 
 function login() {
     username = firstLogin ? { name: prompt("Digite seu Nickname") } : { name: prompt("Nickname em uso ou inválido, tente novamente!") };
@@ -19,11 +20,15 @@ function login() {
             setInterval(listarMensagens, 3000);
             setInterval(keepAlive, 5000);
             input.addEventListener('keydown', logKey);
-            addEventListener('resize', () => { rolaPraBaixo() });
+            addEventListener('resize', () => { rolaPraBaixo(); resetHeight(); });
         } else {
             login();
         }
     }
+}
+
+function resetHeight() {
+    document.body.style.height = window.innerHeight + "px";
 }
 
 function keepAlive() {
@@ -95,3 +100,5 @@ function enviar() {
         });
     }
 }
+
+// https://stackoverflow.com/questions/43575363/css-100vh-is-too-tall-on-mobile-due-to-browser-ui
