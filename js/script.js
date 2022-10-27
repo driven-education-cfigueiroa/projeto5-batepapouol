@@ -28,21 +28,15 @@ function keepAlive() {
 
     axios.post(url + endpoint[1], username).then(resposta).catch(resposta);
     function resposta(resposta) {
-        if (resposta.status === 200) {
-            console.log(resposta);
-        } else {
-            console.log(resposta);
-        }
+        if (resposta.status === 200) { }
     }
 
 }
 
 function listarMensagens() {
-    console.log("recarreguei")
     const promessa = axios.get(url + endpoint[2]);
     promessa.then((resposta) => {
         main.innerHTML = "";
-        console.log(resposta.data)
         for (let i = 0; i < resposta.data.length; i++) {
             switch (resposta.data[i].type) {
                 case msgType[0]:
@@ -58,16 +52,19 @@ function listarMensagens() {
                 </div>`
                     break;
                 case msgType[2]:
-                    main.innerHTML +=
-                        `<div style="background-color: #FFDEDE;">
+                    if (resposta.data[i].from === username.name || resposta.data[i].to === username.name) {
+                        main.innerHTML +=
+                            `<div style="background-color: #FFDEDE;">
                     (${resposta.data[i].time}) ${resposta.data[i].from} para ${resposta.data[i].to}: ${resposta.data[i].text}
                 </div>`
+                    }
                     break;
                 default:
                     break;
             }
         }
-
+        const elementoQueQueroQueApareca = document.querySelector("main div:last-of-type");
+        elementoQueQueroQueApareca.scrollIntoView();
     });
 }
 
@@ -89,9 +86,10 @@ function enviar() {
 
     const promessaNome = axios.post(url + endpoint[2], mensagem);
     promessaNome.then((resposta) => {
-        console.log(resposta);
     });
-
     input.value = "";
     setTimeout(listarMensagens, 500);
+    promessaNome.catch((resposta) => {
+        window.location.reload();
+    });
 }
