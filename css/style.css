@@ -60,6 +60,10 @@ input {
   width: 100%;
 }
 
+input::placeholder{
+  color: #000000;
+}
+
 .overlay {
   display: flex;
   width: 100%;
@@ -81,7 +85,13 @@ input {
 }
 
 strong {
+  display: inline-block;
+  vertical-align: bottom;
+  max-width: 150px;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 span {
