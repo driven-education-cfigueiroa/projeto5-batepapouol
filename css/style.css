@@ -26,7 +26,6 @@ footer {
 }
 
 footer > div:nth-child(1) {
-  background-color: red;
   flex: 1;
   height: 100%;
 }
