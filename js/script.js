@@ -11,7 +11,8 @@ const closeOverlayDiv = document.querySelector("div.overlay > div:nth-child(1)")
 const userlist = document.querySelector(".lista");
 let username;
 let firstLogin = true;
-let firstList = true;
+let lastMsg
+let currentMsg
 
 //login();
 //resetHeight();
@@ -80,6 +81,8 @@ function keepAlive() {
 function listarMensagens() {
     const promessa = axios.get(url + endpoint[2]);
     promessa.then((resposta) => {
+        console.log(resposta.data[resposta.data.length - 1]);
+        lastMsg = JSON.stringify(resposta.data[resposta.data.length - 1]);
         main.innerHTML = "";
         for (let i = 0; i < resposta.data.length; i++) {
             switch (resposta.data[i].type) {
@@ -104,9 +107,9 @@ function listarMensagens() {
                     break;
             }
         }
-        if (firstList) {
+        if (lastMsg !== currentMsg) {
             rolaPraBaixo();
-            firstList = false;
+            currentMsg = lastMsg;
         }
     });
 }
