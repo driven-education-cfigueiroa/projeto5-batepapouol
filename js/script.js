@@ -5,7 +5,8 @@ const main = document.querySelector("main");
 const input = document.querySelector("input");
 let username;
 let firstLogin = true;
-let firstList = true;
+let lastMsg
+let currentMsg
 
 login();
 resetHeight();
@@ -28,7 +29,7 @@ function login() {
 }
 
 function resetHeight() {
-    document.body.style.height = window.innerHeight + "px";
+    document.body.style.height = (window.innerHeight - 1) + "px";
 }
 
 function keepAlive() {
@@ -38,6 +39,8 @@ function keepAlive() {
 function listarMensagens() {
     const promessa = axios.get(url + endpoint[2]);
     promessa.then((resposta) => {
+        console.log(resposta.data[resposta.data.length - 1]);
+        lastMsg = JSON.stringify(resposta.data[resposta.data.length - 1]);
         main.innerHTML = "";
         for (let i = 0; i < resposta.data.length; i++) {
             switch (resposta.data[i].type) {
@@ -62,9 +65,9 @@ function listarMensagens() {
                     break;
             }
         }
-        if (firstList) {
+        if (lastMsg !== currentMsg) {
             rolaPraBaixo();
-            firstList = false;
+            currentMsg = lastMsg;
         }
     });
 }
