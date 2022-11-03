@@ -45,18 +45,18 @@ function listarMensagens() {
         for (let i = 0; i < resposta.data.length; i++) {
             switch (resposta.data[i].type) {
                 case msgType[0]:
-                    main.innerHTML += `<div class="status">
+                    main.innerHTML += `<div class="status" data-test="message">
                     <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> ${resposta.data[i].text}.
                     </div>`
                     break;
                 case msgType[1]:
-                    main.innerHTML += `<div class="message">
+                    main.innerHTML += `<div class="message" data-test="message">
                     <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> para <strong>${resposta.data[i].to}</strong>: ${resposta.data[i].text}
                     </div>`
                     break;
                 case msgType[2]:
                     if (resposta.data[i].from === username.name || resposta.data[i].to === username.name) {
-                        main.innerHTML += `<div class="private_message">
+                        main.innerHTML += `<div class="private_message" data-test="message">
                         <span>(${resposta.data[i].time})</span> <strong>${resposta.data[i].from}</strong> para <strong>${resposta.data[i].to}</strong>: ${resposta.data[i].text}
                         </div>`
                     }
